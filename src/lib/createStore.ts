@@ -1,13 +1,18 @@
-/** first draft — listener type does not match what we pass in notify() */
-type Listener<T> = () => void;
+export type Listener<T> = (next: T, prev: T) => void;
 
-export function createStore<T extends object>(initialState: T) {
-  let state = initialState;
+export type Store<T extends object> = {
+  getState: () => T;
+  setState: (partialOrUpdater: Partial<T> | ((current: T) => Partial<T>)) => void;
+  subscribe: (listener: Listener<T>) => () => void;
+};
+
+export function createStore<T extends object>(initialState: T): Store<T> {
+  let state: T = { ...initialState };
   const listeners = new Set<Listener<T>>();
 
-  function notify() {
+  function notify(next: T, prev: T) {
     for (const fn of listeners) {
-      fn();
+      fn(next, prev);
     }
   }
 
@@ -24,11 +29,13 @@ export function createStore<T extends object>(initialState: T) {
           : partialOrUpdater;
       const prev = state;
       state = { ...state, ...patch };
-      notify();
+      notify(state, prev);
     },
     subscribe(listener: Listener<T>): () => void {
       listeners.add(listener);
-      return () => listeners.delete(listener);
+      return () => {
+        listeners.delete(listener);
+      };
     },
   };
 }
