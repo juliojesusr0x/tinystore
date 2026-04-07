@@ -1,3 +1,12 @@
+import { CounterDemo } from "./demo/CounterDemo";
+
 export function App() {
-  return <p>tinystore</p>;
+  return (
+    <>
+      <h1>tinystore demo</h1>
+      <div className="demo-grid">
+        <CounterDemo />
+      </div>
+    </>
+  );
 }
