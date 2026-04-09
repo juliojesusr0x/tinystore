@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react";
 import { createStore } from "../lib/createStore";
+import { useStore } from "../lib/useStore";
 import { RenderCounter } from "./RenderCounter";
 
 const counterStore = createStore({ count: 0 });
 
 export function CounterDemo() {
-  const [state, setState] = useState(counterStore.getState);
-
-  useEffect(() => {
-    return counterStore.subscribe(() => {
-      setState(counterStore.getState());
-    });
-  }, []);
+  const state = useStore(counterStore);
 
   return (
     <div className="demo-card">
-      <h2>Counter (subscribe + useState)</h2>
+      <h2>Counter (useSyncExternalStore)</h2>
       <p className="row">
         <span>count: {state.count}</span>
         <RenderCounter label="panel" />
@@ -42,8 +36,8 @@ export function CounterDemo() {
         </button>
       </div>
       <p className="muted">
-        Before <code>useStore</code>, wiring React to the store needs a bit of
-        boilerplate.
+        Same store, but the component subscribes through{" "}
+        <code>useSyncExternalStore</code>.
       </p>
     </div>
   );
