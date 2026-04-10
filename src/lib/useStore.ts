@@ -1,11 +1,13 @@
 import { useSyncExternalStore } from "react";
 import type { Store } from "./createStore";
 
-/** wip — selector not here yet */
-export function useStore<S extends object>(store: Store<S>): S {
+export function useStore<S extends object, Selected = S>(
+  store: Store<S>,
+  selector: (state: S) => Selected = (s) => s as unknown as Selected,
+): Selected {
   return useSyncExternalStore(
     (onStoreChange) => store.subscribe(() => onStoreChange()),
-    () => store.getState(),
-    () => store.getState(),
+    () => selector(store.getState()),
+    () => selector(store.getState()),
   );
 }
