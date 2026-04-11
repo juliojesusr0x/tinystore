@@ -4,6 +4,7 @@ import type { Store } from "./createStore";
 export function useStore<S extends object, Selected = S>(
   store: Store<S>,
   selector: (state: S) => Selected = (s) => s as unknown as Selected,
+  isEqual: (a: Selected, b: Selected) => boolean = Object.is,
 ): Selected {
   const cache = useRef<{ state: S; selected: Selected } | null>(null);
 
@@ -15,7 +16,7 @@ export function useStore<S extends object, Selected = S>(
     }
 
     const selected = selector(state);
-    if (c !== null && Object.is(c.selected, selected)) {
+    if (c !== null && isEqual(c.selected, selected)) {
       cache.current = { state, selected: c.selected };
       return c.selected;
     }
