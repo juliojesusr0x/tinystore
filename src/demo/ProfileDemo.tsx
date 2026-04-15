@@ -1,5 +1,6 @@
 import { createStore } from "../lib/createStore";
 import { useStore } from "../lib/useStore";
+import { RenderCounter } from "./RenderCounter";
 
 export const profileStore = createStore({
   name: "Ada",
@@ -14,6 +15,7 @@ function NameLine() {
       <span>
         name: <strong>{name}</strong>
       </span>
+      <RenderCounter label="name line" />
     </p>
   );
 }
@@ -25,6 +27,7 @@ function AgeLine() {
       <span>
         age: <strong>{age}</strong>
       </span>
+      <RenderCounter label="age line" />
     </p>
   );
 }
@@ -86,7 +89,8 @@ export function ProfileDemo() {
         <AgeField />
       </div>
       <p className="muted">
-        Each line only subscribes to its own field.
+        Change <strong>name</strong>: the <em>age line</em> render badge should stay
+        the same.
       </p>
     </div>
   );
