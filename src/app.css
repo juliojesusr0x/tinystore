@@ -44,6 +44,13 @@ h1 {
   font-size: 1rem;
 }
 
+code {
+  font-size: 0.9em;
+  background: #f4f4f5;
+  padding: 0.1em 0.25em;
+  border-radius: 4px;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
