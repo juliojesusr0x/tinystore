@@ -1,8 +1,13 @@
 export type Listener<T> = (next: T, prev: T) => void;
 
+/** not sure if exporting this is useful — kept for typing experiments */
+export type SetStateArg<T extends object> =
+  | Partial<T>
+  | ((current: T) => Partial<T>);
+
 export type Store<T extends object> = {
   getState: () => T;
-  setState: (partialOrUpdater: Partial<T> | ((current: T) => Partial<T>)) => void;
+  setState: (arg: SetStateArg<T>) => void;
   subscribe: (listener: Listener<T>) => () => void;
 };
 
@@ -20,13 +25,8 @@ export function createStore<T extends object>(initialState: T): Store<T> {
     getState(): T {
       return state;
     },
-    setState(
-      partialOrUpdater: Partial<T> | ((current: T) => Partial<T>),
-    ): void {
-      const patch =
-        typeof partialOrUpdater === "function"
-          ? partialOrUpdater(state)
-          : partialOrUpdater;
+    setState(arg: SetStateArg<T>): void {
+      const patch = typeof arg === "function" ? arg(state) : arg;
       const prev = state;
       state = { ...state, ...patch };
       notify(state, prev);
