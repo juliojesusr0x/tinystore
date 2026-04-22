@@ -52,6 +52,7 @@ React can render in a way where work is interrupted. If you read an external val
 ### create a store
 
 ```ts
+// In this repo Vite maps `tinystore` -> `src/lib/index.ts`
 import { createStore } from "tinystore";
 
 const counterStore = createStore({ count: 0 });
