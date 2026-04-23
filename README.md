@@ -127,6 +127,12 @@ bun run test
 bun run build
 ```
 
+## Folder layout (for navigation)
+
+- `src/lib` — the actual library code
+- `src/demo` — UI only, not published as a package
+- `src/tests` — vitest
+
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
