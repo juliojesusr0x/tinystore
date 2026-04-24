@@ -107,6 +107,7 @@ There is a tiny `debug(store, label?)` that logs `prev`, `next`, and `changed` k
 
 ## Trade-offs
 
+- In dev, React `StrictMode` can render components twice on purpose. The yellow render badges can look a bit confusing because of that. In production build it is normal.
 - No middleware, no devtools, no immer, no async layer.
 - No built-in `persist`. You can add it yourself, but this repo does not try.
 - `setState` always notifies listeners, even if the merge result is shallow-equal to the previous state. I prefer to keep the core dumb and predictable.
