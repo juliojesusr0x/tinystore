@@ -47,54 +47,38 @@ React can render in a way where work is interrupted. If you read an external val
 
 `useSyncExternalStore` is the supported API to read external data during render and stay consistent. I am not an expert on the whole concurrent story, but for a store like this one, this hook is the right default.
 
-## API examples
-
-### create a store
+## API at a glance
 
 ```ts
 // In this repo Vite maps `tinystore` -> `src/lib/index.ts`
-import { createStore } from "tinystore";
+import { createStore, useStore, shallow, debug } from "tinystore";
 
-const counterStore = createStore({ count: 0 });
+const store = createStore({ count: 0 });
 
-counterStore.getState(); // { count: 0 }
-
-counterStore.setState({ count: 1 });
-
-counterStore.setState((state) => ({ count: state.count + 1 }));
-
-const unsub = counterStore.subscribe((next, prev) => {
-  console.log(next, prev);
-});
-
+store.getState();                                 // read
+store.setState({ count: 1 });                     // partial merge
+store.setState((s) => ({ count: s.count + 1 })); // updater
+const unsub = store.subscribe((next, prev) => {}); // side-effect
 unsub();
 ```
 
-### useStore hook
+In a React component:
 
 ```tsx
-import { createStore, useStore, shallow } from "tinystore";
-
-const store = createStore({ count: 0, name: "ada" });
-
-function Count() {
-  const count = useStore(store, (s) => s.count);
-  return <button onClick={() => store.setState((s) => ({ count: s.count + 1 }))}>{count}</button>;
-}
-
-function Slice() {
-  const part = useStore(
-    store,
-    (s) => ({ count: s.count, name: s.name }),
-    shallow,
-  );
-  return (
-    <pre>{JSON.stringify(part)}</pre>
-  );
-}
+const count = useStore(store, (s) => s.count);
 ```
 
-### optional debug helper
+With an object slice you probably want `shallow`:
+
+```tsx
+const slice = useStore(store, (s) => ({ a: s.a, b: s.b }), shallow);
+```
+
+### More examples
+
+For a bigger tour (counters, toggles, todos, async fetch, multiple stores, persist to localStorage, derived values, testing, etc.) see **[EXAMPLES.md](EXAMPLES.md)**.
+
+### Optional debug helper
 
 There is a tiny `debug(store, label?)` that logs `prev`, `next`, and `changed` keys. It is only for local debugging. In the demo app it is commented out in `App.tsx`.
 
